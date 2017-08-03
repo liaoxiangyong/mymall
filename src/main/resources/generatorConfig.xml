@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!---导入属性配置-->
+    <properties resource="application.properties"></properties>
+    <!--数据库的jdbc驱动的jar包地址-->
+    <classPathEntry location="${db.path}" />
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!--jdbc数据库连接-->
+        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="edu.ccnt.mymall.model" targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mappers"  targetProject=".\src\main\resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="edu.ccnt.mymall.dao"  targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <table schema="DB2ADMIN" tableName="mmall_cart" domainObjectName="Cart"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_category" domainObjectName="Category"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_order" domainObjectName="Order"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_order_item" domainObjectName="OrderItem"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_pay_info" domainObjectName="PayInfo"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_product" domainObjectName="Product"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride column="detail" jdbcType="VARCHAR" />
+            <columnOverride column="sub_images" jdbcType="VARCHAR" />
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_shipping" domainObjectName="Shipping"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="DB2ADMIN" tableName="mmall_user" domainObjectName="User"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+        >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+
+    </context>
+</generatorConfiguration>
