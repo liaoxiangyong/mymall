@@ -1,7 +1,11 @@
 package edu.ccnt.mymall;
 
+import edu.ccnt.mymall.common.ServerResponse;
+import edu.ccnt.mymall.model.User;
+import edu.ccnt.mymall.service.IUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -9,8 +13,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class MymallApplicationTests {
 
+	@Autowired
+	private IUserService iUserService;
 	@Test
+
 	public void contextLoads() {
+		ServerResponse<User> serverResponse = iUserService.login("tom","123");
+		System.out.println(0);
 	}
 
 }

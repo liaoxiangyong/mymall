@@ -1,6 +1,8 @@
 package edu.ccnt.mymall.dao;
 
 import edu.ccnt.mymall.model.User;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 public interface UserMapper {
     /**
@@ -50,4 +52,11 @@ public interface UserMapper {
      * @mbg.generated Wed Aug 02 21:00:02 CST 2017
      */
     int updateByPrimaryKey(User record);
+
+
+    //检查用户名是否存在
+    int checkUsername(String username);
+
+    //查找用户
+    User selectLogin(String username,String password);
 }
