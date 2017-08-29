@@ -8,4 +8,8 @@ import org.springframework.stereotype.Service;
 public interface IUserService {
 
     ServerResponse<User> login(String username,String password);
+
+    ServerResponse<String> checkInfo(String type,String str);
+
+    ServerResponse<String> register(User user);
 }

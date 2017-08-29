@@ -62,4 +62,7 @@ public interface UserMapper {
 
     //查找用户
     User selectLogin(@Param("username") String username, @Param("password") String password);
+
+    //检查邮箱是否已存在
+    int checkEmail(String email);
 }
