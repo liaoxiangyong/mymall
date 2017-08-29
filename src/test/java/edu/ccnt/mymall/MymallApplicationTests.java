@@ -18,7 +18,7 @@ public class MymallApplicationTests {
 	@Test
 
 	public void contextLoads() {
-		ServerResponse<User> serverResponse = iUserService.login("tom","123");
+		ServerResponse<String> serverResponse = iUserService.checkInfo("email","123@163.com");
 		System.out.println(0);
 	}
 
