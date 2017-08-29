@@ -26,7 +26,7 @@
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="mappers"  targetProject=".\src\main\resources">
+        <sqlMapGenerator targetPackage="mappers"  targetProject="./src/main/resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
