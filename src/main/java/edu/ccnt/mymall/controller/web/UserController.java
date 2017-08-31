@@ -66,5 +66,11 @@ public class UserController {
         return iUserService.checkAnswer(username,question,answer);
     }
 
+    //忘记密码之后更改密码
+    @RequestMapping(value = "forgetUpdatePassword.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetUpdatePassword(String username,String newPassword,String forgetToken){
+        return iUserService.forgetUpdatePassword(username,newPassword,forgetToken);
+    }
 
 }

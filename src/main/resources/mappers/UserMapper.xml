@@ -218,4 +218,9 @@
     where username = #{username} and question = #{question} and answer = #{answer}
   </select>
 
+  <update id="updatePassword" parameterType="map">
+    update mmall_user
+    set password = #{newPassword}, update_time = now()
+    where username = #{username}
+  </update>
 </mapper>
