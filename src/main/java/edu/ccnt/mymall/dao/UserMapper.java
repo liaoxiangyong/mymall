@@ -72,4 +72,9 @@ public interface UserMapper {
 
     //修改密码
     int updatePassword(String username,String newPassword);
+
+    int checkPassword(@Param("username")String username,@Param("password")String password);
+
+    //email，检测非当前用户是否用到改email
+    int checkEmainOtherUser(@Param("userId") int userId,@Param("email") String email);
 }

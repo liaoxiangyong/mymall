@@ -18,4 +18,8 @@ public interface IUserService {
     ServerResponse<String> checkAnswer(String username,String question,String answer);
 
     ServerResponse<String> forgetUpdatePassword(String username,String newPassword,String forgetToken);
+
+    ServerResponse<User> updateUserInfo(User user);
+
+    ServerResponse<String> resetPassword(User user,String oldPassword,String newPassword);
 }

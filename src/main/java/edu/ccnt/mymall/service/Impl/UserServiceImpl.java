@@ -1,5 +1,6 @@
 package edu.ccnt.mymall.service.Impl;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import edu.ccnt.mymall.common.Const;
 import edu.ccnt.mymall.common.ServerResponse;
 import edu.ccnt.mymall.common.TokenCache;
@@ -147,5 +148,40 @@ public class UserServiceImpl implements IUserService{
         }
 
         return ServerResponse.createByErrorMessage("修改密码失败");
+    }
+
+    @Override
+    public ServerResponse<User> updateUserInfo(User user) {
+        //需要校验email，email不能为其他用户已经使用的email
+        String email = user.getEmail();
+        int resultCount = userMapper.checkEmainOtherUser(user.getId(),user.getEmail());
+        if(resultCount>0){
+            return ServerResponse.createByErrorMessage("该email已被使用");
+        }
+        User newUser = new User();
+        newUser.setEmail(user.getEmail());
+        newUser.setPhone(user.getPhone());
+        newUser.setQuestion(user.getQuestion());
+        newUser.setAnswer(user.getAnswer());
+        int updateCount = userMapper.updateByPrimaryKeySelective(newUser);
+        if(updateCount>0){
+            return ServerResponse.createBySuccess("信息更新成功",newUser);
+        }
+        return ServerResponse.createByErrorMessage("更新失败");
+    }
+
+    @Override
+    public ServerResponse<String> resetPassword(User user, String oldPassword, String newPassword) {
+        //校验密码是否正确
+        int resultCount = userMapper.checkPassword(user.getUsername(),MD5Util.MD5EncodeUtf8(oldPassword));
+        if(resultCount>0){
+            user.setPassword(MD5Util.MD5EncodeUtf8(newPassword));
+            resultCount = userMapper.updateByPrimaryKeySelective(user);
+            if(resultCount>0)
+                return ServerResponse.createBySuccessMessage("密码更新成功");
+        }else{
+            return ServerResponse.createByErrorMessage("原始密码输入错误");
+        }
+        return ServerResponse.createByErrorMessage("密码重置失败");
     }
 }

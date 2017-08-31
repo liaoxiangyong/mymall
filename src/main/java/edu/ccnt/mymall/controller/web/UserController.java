@@ -73,4 +73,32 @@ public class UserController {
         return iUserService.forgetUpdatePassword(username,newPassword,forgetToken);
     }
 
+    //重置密码
+    @RequestMapping(value = "resetPassword.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> resetPassword(HttpSession httpSession,String oldPassword,String newPassword){
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        return iUserService.resetPassword(user,oldPassword,newPassword);
+    }
+
+    //更新用户信息
+    @RequestMapping(value = "forgetUpdatePassword.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> updateUserInfo(HttpSession httpSession,User user){
+        User currentUser = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(currentUser==null){
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        user.setId(currentUser.getId());
+        user.setUsername(currentUser.getUsername());        //id，username不能更新
+        ServerResponse<User> response = iUserService.updateUserInfo(user);
+        if(response.isSuccess()){
+            response.getData().setUsername(currentUser.getUsername());
+            httpSession.setAttribute(Const.CURRENT_USER,response.getData());
+        }
+        return response;
+    }
 }
