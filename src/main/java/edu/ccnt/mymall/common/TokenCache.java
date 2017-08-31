@@ -16,6 +16,7 @@ public class TokenCache {
 
     public static String TOKEN_PREFIX = "token_";
 
+    //这里使用的是LRU算法
     private static LoadingCache<String,String> loadingCache = CacheBuilder.newBuilder().concurrencyLevel(20).initialCapacity(1000).maximumSize(10000).
             expireAfterAccess(12, TimeUnit.HOURS).build(new CacheLoader<String, String>() {
         @Override

@@ -51,4 +51,20 @@ public class UserController {
     public ServerResponse<String> checkInfo(String type,String str){
         return iUserService.checkInfo(type,str);
     }
+
+    //密码忘记，获取问题
+    @RequestMapping(value = "getQuestion.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetGetQuestion(String username){
+        return iUserService.getQuestion(username);
+    }
+
+    //校验问题答案
+    @RequestMapping(value = "checkAnswer.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> forgetCheckAnswer(String username,String question,String answer){
+        return iUserService.checkAnswer(username,question,answer);
+    }
+
+
 }

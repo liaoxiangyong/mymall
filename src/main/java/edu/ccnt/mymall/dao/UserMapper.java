@@ -65,4 +65,8 @@ public interface UserMapper {
 
     //检查邮箱是否已存在
     int checkEmail(String email);
+
+    String findQuestion(String username);
+
+    int checkAnswer(@Param("username") String username,@Param("question") String question,@Param("answer") String answer);
 }

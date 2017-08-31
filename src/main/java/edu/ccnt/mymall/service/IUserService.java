@@ -12,4 +12,8 @@ public interface IUserService {
     ServerResponse<String> checkInfo(String type,String str);
 
     ServerResponse<String> register(User user);
+
+    ServerResponse<String> getQuestion(String username);
+
+    ServerResponse<String> checkAnswer(String username,String password,String answer);
 }
