@@ -1,6 +1,7 @@
 package edu.ccnt.mymall.controller.web;
 
 import edu.ccnt.mymall.common.Const;
+import edu.ccnt.mymall.common.ResponseCode;
 import edu.ccnt.mymall.common.ServerResponse;
 import edu.ccnt.mymall.model.User;
 import edu.ccnt.mymall.service.IUserService;
@@ -100,5 +101,16 @@ public class UserController {
             httpSession.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;
+    }
+
+    //获取用户信息
+    @RequestMapping(value = "getUserInfo.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> getUserInfo(HttpSession httpSession){
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),"未登录，请先登录");
+        }
+        return iUserService.getUserInfo(user.getId());
     }
 }

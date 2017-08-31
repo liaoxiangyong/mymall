@@ -184,4 +184,15 @@ public class UserServiceImpl implements IUserService{
         }
         return ServerResponse.createByErrorMessage("密码重置失败");
     }
+
+    @Override
+    public ServerResponse<User> getUserInfo(int userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user ==null){
+            return ServerResponse.createByErrorMessage("用户不存在");
+        }
+        user.setPassword(StringUtils.EMPTY);
+
+        return ServerResponse.createBySuccess("查找成功",user);
+    }
 }
