@@ -86,7 +86,7 @@ public class UserController {
     }
 
     //更新用户信息
-    @RequestMapping(value = "forgetUpdatePassword.do",method = RequestMethod.POST)
+    @RequestMapping(value = "UpdateUserInfo.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> updateUserInfo(HttpSession httpSession,User user){
         User currentUser = (User) httpSession.getAttribute(Const.CURRENT_USER);
