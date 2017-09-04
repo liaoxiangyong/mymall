@@ -71,7 +71,7 @@ public interface UserMapper {
     int checkAnswer(@Param("username") String username,@Param("question") String question,@Param("answer") String answer);
 
     //修改密码
-    int updatePassword(String username,String newPassword);
+    int updatePassword(@Param("username")String username,@Param("password") String password);
 
     int checkPassword(@Param("username")String username,@Param("password")String password);
 
