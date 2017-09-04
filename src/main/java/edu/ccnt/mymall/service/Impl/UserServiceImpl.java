@@ -8,6 +8,7 @@ import edu.ccnt.mymall.dao.UserMapper;
 import edu.ccnt.mymall.model.User;
 import edu.ccnt.mymall.service.IUserService;
 import edu.ccnt.mymall.util.MD5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service("iUserService")
 public class UserServiceImpl implements IUserService{
 
@@ -23,6 +25,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<User> login(String username, String password) {
+        log.info("用户登录："+username);
         int userCount = userMapper.checkUsername(username);
         if(userCount==0){
             return ServerResponse.createByErrorMessage("用户名不存在");
@@ -41,6 +44,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> checkInfo(String type, String str) {
+        log.info("校验"+type+":"+str);
         if(StringUtils.isNotBlank(type)){
             //开始校验
             if(Const.EMAIL.equals(type)){
@@ -63,6 +67,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> register(User user) {
+        log.info("用户注册:"+user);
         //需要先校验用户名和邮箱是否已存在
         ServerResponse<String> serverResponse = this.checkInfo(Const.USERNAME,user.getUsername());
         if(!serverResponse.isSuccess()){
@@ -87,6 +92,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> getQuestion(String username) {
+        log.info("获取用户问题："+username);
         //1、先检查username是否存在
         ServerResponse<String > serverResponse = this.checkInfo(Const.USERNAME,username);
         if(serverResponse.isSuccess()){
@@ -103,6 +109,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> checkAnswer(String username, String question, String answer) {
+        log.info("校验"+username+"问题答案"+question+":"+answer);
         //1、先检查用户名是否存在
         ServerResponse<String > serverResponse = this.checkInfo(Const.USERNAME,username);
         if(serverResponse.isSuccess()){
@@ -121,6 +128,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> forgetUpdatePassword(String username, String newPassword, String forgetToken) {
+        log.info("忘记密码之更新密码");
         if(StringUtils.isBlank(forgetToken)){
             return ServerResponse.createByErrorMessage("参数错误，需要传递token");
         }
@@ -152,6 +160,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<User> updateUserInfo(User user) {
+        log.info("更新用户信息"+user);
         //需要校验email，email不能为其他用户已经使用的email
         String email = user.getEmail();
         int resultCount = userMapper.checkEmainOtherUser(user.getId(),user.getEmail());
@@ -172,6 +181,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<String> resetPassword(User user, String oldPassword, String newPassword) {
+        log.info("重置密码"+user);
         //校验密码是否正确
         int resultCount = userMapper.checkPassword(user.getUsername(),MD5Util.MD5EncodeUtf8(oldPassword));
         if(resultCount>0){
@@ -187,6 +197,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public ServerResponse<User> getUserInfo(int userId) {
+        log.info("获取用户信息"+userId);
         User user = userMapper.selectByPrimaryKey(userId);
         if(user ==null){
             return ServerResponse.createByErrorMessage("用户不存在");
