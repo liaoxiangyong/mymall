@@ -206,4 +206,12 @@ public class UserServiceImpl implements IUserService{
 
         return ServerResponse.createBySuccess("查找成功",user);
     }
+
+    @Override
+    public ServerResponse<String> checkUserAdmin(User user){
+        if(user.getRole()==Const.Role.ROLE_ADMIN){
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByErrorMessage("没有权限");
+    }
 }

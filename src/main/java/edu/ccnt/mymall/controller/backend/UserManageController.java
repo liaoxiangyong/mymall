@@ -19,9 +19,9 @@ public class UserManageController {
     @Autowired
     private IUserService iUserService;
 
-    @RequestMapping(value = "/login.do",method = RequestMethod.POST)
+    @RequestMapping(value = "login.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse login(String username, String password, HttpSession httpSession){
+    public ServerResponse<User> login(String username, String password, HttpSession httpSession){
         ServerResponse serverResponse = iUserService.login(username,password);
         if(serverResponse.isSuccess()){
             User user = (User) serverResponse.getData();
