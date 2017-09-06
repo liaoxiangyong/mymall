@@ -1,6 +1,7 @@
 package edu.ccnt.mymall.dao;
 
 import edu.ccnt.mymall.model.Product;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -56,4 +57,8 @@ public interface ProductMapper {
 
     //查询商品列表
     List<Product> selectProductList();
+
+
+    //搜索商品
+    List<Product> searchProductLsit(@Param(value = "productName") String productName, @Param(value = "productId") Integer productId);
 }

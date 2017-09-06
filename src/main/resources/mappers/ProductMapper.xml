@@ -221,4 +221,19 @@
     from mmall_product
     ORDER BY id ASC
   </select>
+
+  <select id="searchProductLsit" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mmall_product
+    <where>
+      <if test="productName != null">
+        and name like #{productName}
+      </if>
+      <if test="productId != null">
+        and name like #{productId}
+      </if>
+    </where>
+    ORDER BY id ASC
+  </select>
 </mapper>

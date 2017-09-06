@@ -120,4 +120,33 @@ public class ProductManageController {
         }
     }
 
+    /**
+     * 商品搜索
+     * @param httpSession
+     * @param productName
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "searchProductList.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("搜索商品")
+    public ServerResponse searchProductList(HttpSession httpSession,String productName,int productId,
+                                            @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
+                                            @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),"管理员未登录");
+        }
+        //2、验证是否管理员
+        if(iUserService.checkUserAdmin(user).isSuccess()){
+            //3、业务逻辑
+            return  iProductService.searchProductList(productName,productId,pageNum,pageSize);
+        }else{
+            return ServerResponse.createByErrorMessage("用户无权限");
+        }
+    }
+
 }
