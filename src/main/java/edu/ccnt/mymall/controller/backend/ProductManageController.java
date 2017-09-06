@@ -9,10 +9,7 @@ import edu.ccnt.mymall.service.IProductService;
 import edu.ccnt.mymall.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -94,6 +91,30 @@ public class ProductManageController {
         if(iUserService.checkUserAdmin(user).isSuccess()){
             //3、业务逻辑
             return  iProductService.getDetail(productId);
+        }else{
+            return ServerResponse.createByErrorMessage("用户无权限");
+        }
+    }
+
+    /**
+     * 获取商品列表
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping(value = "getProductList.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("获取商品列表")
+    public ServerResponse getProductList(HttpSession httpSession, @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
+                                         @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),"管理员未登录");
+        }
+        //2、验证是否管理员
+        if(iUserService.checkUserAdmin(user).isSuccess()){
+            //3、业务逻辑
+            return  iProductService.manageGetProductList(pageNum,pageSize);
         }else{
             return ServerResponse.createByErrorMessage("用户无权限");
         }
