@@ -75,4 +75,28 @@ public class ProductManageController {
         }
     }
 
+    /**
+     * 获取商品详情
+     * @param httpSession
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "getDetail.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("获取商品信息")
+    public ServerResponse getDetail(HttpSession httpSession,int productId){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),"管理员未登录");
+        }
+        //2、验证是否管理员
+        if(iUserService.checkUserAdmin(user).isSuccess()){
+            //3、业务逻辑
+            return  iProductService.getDetail(productId);
+        }else{
+            return ServerResponse.createByErrorMessage("用户无权限");
+        }
+    }
+
 }
