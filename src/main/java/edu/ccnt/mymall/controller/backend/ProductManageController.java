@@ -5,13 +5,20 @@ import edu.ccnt.mymall.common.ResponseCode;
 import edu.ccnt.mymall.common.ServerResponse;
 import edu.ccnt.mymall.model.Product;
 import edu.ccnt.mymall.model.User;
+import edu.ccnt.mymall.service.IFileService;
 import edu.ccnt.mymall.service.IProductService;
 import edu.ccnt.mymall.service.IUserService;
+import edu.ccnt.mymall.util.PropertiesUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/manage/product/")
@@ -22,6 +29,9 @@ public class ProductManageController {
 
     @Autowired
     private IProductService iProductService;
+
+    @Autowired
+    private IFileService iFileService;
 
     /**
      * 添加或者更新商品信息
@@ -150,5 +160,38 @@ public class ProductManageController {
     }
 
 
+    /**
+     * 图片上传
+     * @param httpSession
+     * @param file
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "uploadImage",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("图片上传")
+    public ServerResponse uploadImage(HttpSession httpSession, @RequestParam(value = "upload_file",required = false) MultipartFile file,
+                                      HttpServletRequest httpServletRequest){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),"管理员未登录");
+        }
+        //2、验证是否管理员
+        if(iUserService.checkUserAdmin(user).isSuccess()){
+            //3、业务逻辑
+            String path = httpServletRequest.getSession().getServletContext().getRealPath("upload");
+            String targetName = iFileService.uploadFile(file,path);
+            if(StringUtils.isBlank(targetName))
+                return ServerResponse.createByErrorMessage("图片上传失败！");
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetName;
+            Map result = new HashMap();
+            result.put("uri",targetName);
+            result.put("url",url);
+            return  ServerResponse.createBySuccess(result);
+        }else{
+            return ServerResponse.createByErrorMessage("用户无权限");
+        }
+    }
 
 }

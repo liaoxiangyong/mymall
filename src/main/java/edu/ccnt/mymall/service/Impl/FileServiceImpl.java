@@ -33,12 +33,11 @@ public class FileServiceImpl implements IFileService{
         File targetFile = new File(path,uploadName);
 
         try {
-            file.transferTo(targetFile);
             //文件上传成功
-
-            FtpUtil.uploadFile(Lists.newArrayList(targetFile));
-
+            file.transferTo(targetFile);
             //已经上传到ftp服务器上
+            FtpUtil.uploadFile(Lists.newArrayList(targetFile));
+            //删除在tomcat中的文件
             targetFile.delete();
         } catch (IOException e) {
             log.error("文件上传异常",e);
