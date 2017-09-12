@@ -170,7 +170,7 @@ public class ProductManageController {
     @RequestMapping(value = "uploadImage",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation("图片上传")
-    public ServerResponse uploadImage(HttpSession httpSession, @RequestParam(value = "upload_file",required = false) MultipartFile file,
+    public ServerResponse uploadImage(HttpSession httpSession, @RequestParam(value = "uploadFile",required = false) MultipartFile file,
                                       HttpServletRequest httpServletRequest){
         //1、验证登录
         User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
@@ -191,6 +191,42 @@ public class ProductManageController {
             return  ServerResponse.createBySuccess(result);
         }else{
             return ServerResponse.createByErrorMessage("用户无权限");
+        }
+    }
+
+    @RequestMapping(value = "uploadRichTextImage",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("富文本上传")
+    public Map uploadRichTextImage(HttpSession httpSession, @RequestParam(value = "uploadRichTextFile",required = false) MultipartFile file,
+                                      HttpServletRequest httpServletRequest){
+        Map result = new HashMap();
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user==null){
+            result.put("success",false);
+            result.put("msg","请登录管理员");
+            return result;
+        }
+        //2、验证是否管理员
+        if(iUserService.checkUserAdmin(user).isSuccess()){
+            //3、业务逻辑
+            String path = httpServletRequest.getSession().getServletContext().getRealPath("upload");
+            String targetName = iFileService.uploadFile(file,path);
+            if(StringUtils.isBlank(targetName)) {
+                result.put("success",false);
+                result.put("msg","上传失败");
+                return result;
+            }
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetName;
+
+            result.put("success",true);
+            result.put("msg","上传成功");
+            result.put("file_path",url);
+            return result;
+        }else{
+            result.put("success",false);
+            result.put("msg","无管理员权限");
+            return result;
         }
     }
 
