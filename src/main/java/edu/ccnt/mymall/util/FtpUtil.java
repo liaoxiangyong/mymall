@@ -2,11 +2,13 @@ package edu.ccnt.mymall.util;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 //ftp工具类
@@ -37,7 +39,7 @@ public class FtpUtil {
         boolean isSuccess = false;
         ftpClient = new FTPClient();
         try {
-            ftpClient.connect(ip);
+            ftpClient.connect(ip,port);
             isSuccess = ftpClient.login(user,password);
         } catch (IOException e) {
             log.error("ftp服务器连接异常",e);
@@ -49,7 +51,7 @@ public class FtpUtil {
         FtpUtil ftpUtil = new FtpUtil(ftpIp,ftpPort,ftpUser,ftpPass);
         log.info("开始连接ftp服务器");
         boolean result = ftpUtil.uploadFile("img",fileList);
-        log.info("开始连接ftp服务器,结束上传,上传结果:{}"+result);
+        log.info("开始连接ftp服务器,结束上传,上传结果:"+result);
         return result;
     }
 
@@ -62,11 +64,12 @@ public class FtpUtil {
                 ftpClient.changeWorkingDirectory(remotePath);
                 ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding("UTF-8");
-                ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-                ftpClient.enterLocalPassiveMode();
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+//                ftpClient.enterLocalPassiveMode();
                 for(File fileItem : fileList){
                     fis  = new FileInputStream(fileItem);
-                    ftpClient.storeFile(fileItem.getName(),fis);
+                    String fileName = fileItem.getName();
+                    ftpClient.storeFile(fileName,fis);
                 }
             }
         }catch (IOException e){
