@@ -167,7 +167,7 @@ public class ProductManageController {
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "uploadImage",method = RequestMethod.POST)
+    @RequestMapping(value = "uploadImage.do",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation("图片上传")
     public ServerResponse uploadImage(HttpSession httpSession, @RequestParam(value = "uploadFile",required = false) MultipartFile file,
@@ -194,7 +194,7 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping(value = "uploadRichTextImage",method = RequestMethod.POST)
+    @RequestMapping(value = "uploadRichTextImage.do",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation("富文本上传")
     public Map uploadRichTextImage(HttpSession httpSession, @RequestParam(value = "uploadRichTextFile",required = false) MultipartFile file,

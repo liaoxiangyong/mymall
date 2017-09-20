@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -19,7 +21,7 @@ public class FileServiceImpl implements IFileService{
 
     public String uploadFile(MultipartFile file,String path){
         log.info("上传文件");
-        String fileName = file.getName();
+        String fileName = file.getOriginalFilename();
         //文件扩展名
         String fileExtensionName = fileName.substring(fileName.lastIndexOf(".")+1);
         String uploadName = UUID.randomUUID().toString() + "." + fileExtensionName;
@@ -33,10 +35,12 @@ public class FileServiceImpl implements IFileService{
         File targetFile = new File(path,uploadName);
 
         try {
-            //文件上传成功
+            //文件上传成功,到upload文件夹下面
             file.transferTo(targetFile);
             //已经上传到ftp服务器上
-            FtpUtil.uploadFile(Lists.newArrayList(targetFile));
+            boolean isSuccess = FtpUtil.uploadFile(Lists.newArrayList(targetFile));
+            if(!isSuccess)
+                return null;
             //删除在tomcat中的文件
             targetFile.delete();
         } catch (IOException e) {
