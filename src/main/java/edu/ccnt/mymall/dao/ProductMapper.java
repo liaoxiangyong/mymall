@@ -61,4 +61,8 @@ public interface ProductMapper {
 
     //搜索商品
     List<Product> searchProductLsit(@Param(value = "productName") String productName, @Param(value = "productId") Integer productId);
+
+
+    //前台用户搜索商品，关键字，类别，排序等
+    List<Product> searchProducts(@Param(value = "productName") String keyword, @Param("categoryIdList")List<Integer> categoryIdList,@Param("orderBy")String orderBy);
 }
