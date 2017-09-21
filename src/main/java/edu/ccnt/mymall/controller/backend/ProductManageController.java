@@ -184,7 +184,7 @@ public class ProductManageController {
             String targetName = iFileService.uploadFile(file,path);
             if(StringUtils.isBlank(targetName))
                 return ServerResponse.createByErrorMessage("图片上传失败！");
-            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetName;
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+PropertiesUtil.getProperty("ftp.server.img")+"/"+targetName;
             Map result = new HashMap();
             result.put("uri",targetName);
             result.put("url",url);
@@ -217,7 +217,7 @@ public class ProductManageController {
                 result.put("msg","上传失败");
                 return result;
             }
-            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetName;
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+PropertiesUtil.getProperty("ftp.server.img")+"/"+targetName;
 
             result.put("success",true);
             result.put("msg","上传成功");
