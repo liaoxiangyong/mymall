@@ -42,7 +42,7 @@ public class ProductServiceImpl implements IProductService {
                     product.setMainImage(images[0]);
                 }
             }
-            if(product.getId()!=null){      //添加商品
+            if(product.getId()==null){      //添加商品
                 int resultCount = productMapper.insert(product);
                 if(resultCount>0){
                     return ServerResponse.createBySuccess("添加商品成功");

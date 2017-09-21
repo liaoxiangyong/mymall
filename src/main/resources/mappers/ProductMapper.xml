@@ -231,7 +231,7 @@
         and name like #{productName}
       </if>
       <if test="productId != null">
-        and name like #{productId}
+        and id = #{productId}
       </if>
     </where>
     ORDER BY id ASC

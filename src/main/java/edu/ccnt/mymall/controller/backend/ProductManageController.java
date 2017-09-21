@@ -142,7 +142,7 @@ public class ProductManageController {
     @RequestMapping(value = "searchProductList.do",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation("搜索商品")
-    public ServerResponse searchProductList(HttpSession httpSession,String productName,int productId,
+    public ServerResponse searchProductList(HttpSession httpSession,String productName,Integer productId,
                                             @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
                                             @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
         //1、验证登录

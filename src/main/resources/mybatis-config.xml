@@ -9,5 +9,10 @@
     <mappers>
         <mapper resource="mappers/UserMapper.xml"/>
         <mapper resource="mappers/CategoryMapper.xml"/>
+        <mapper resource="mappers/ProductMapper.xml"/>
+        <mapper resource="mappers/CartMapper.xml"/>
+        <mapper resource="mappers/OrderItemMapper.xml"/>
+        <mapper resource="mappers/ShippingMapper.xml"/>
+        <mapper resource="mappers/PayInfoMapper.xml"/>
     </mappers>
 </configuration>
