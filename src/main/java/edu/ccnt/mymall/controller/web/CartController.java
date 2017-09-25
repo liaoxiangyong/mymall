@@ -43,4 +43,17 @@ public class CartController {
 
         return iCartService.addCartProduct(user.getId(),productId,count);
     }
+
+    @RequestMapping(value = "updateCartProduct.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("更新购物车中商品数量")
+    public ServerResponse updateCartProduct(HttpSession httpSession,Integer productId,Integer count){
+        //验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+
+        return iCartService.updateCartProduct(user.getId(),productId,count);
+    }
 }

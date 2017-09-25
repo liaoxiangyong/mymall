@@ -1,6 +1,7 @@
 package edu.ccnt.mymall.service.Impl;
 
 import edu.ccnt.mymall.common.Const;
+import edu.ccnt.mymall.common.ResponseCode;
 import edu.ccnt.mymall.common.ServerResponse;
 import edu.ccnt.mymall.dao.CartMapper;
 import edu.ccnt.mymall.dao.ProductMapper;
@@ -50,6 +51,19 @@ public class CartServiceImpl implements ICartService{
         return this.list(userId);
     }
 
+
+    public ServerResponse<CartVo> updateCartProduct(Integer userId,Integer productId,Integer count) {
+        log.info("更新购物车商品数量");
+        if(productId == null || count == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGLE_ARGUMENT.getCode(),ResponseCode.ILLEGLE_ARGUMENT.getDesc());
+        }
+        Cart cart = cartMapper.findCartByUserIdAndProductId(userId,productId);
+        if(cart != null){
+            cart.setQuantity(count);
+        }
+        cartMapper.updateByPrimaryKeySelective(cart);
+        return this.list(userId);
+    }
 
     public ServerResponse<CartVo> list (Integer userId){
         CartVo cartVo = this.getCartVoLimit(userId);
