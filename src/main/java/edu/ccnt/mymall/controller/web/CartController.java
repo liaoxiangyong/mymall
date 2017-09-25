@@ -70,6 +70,19 @@ public class CartController {
         return iCartService.deleteCartProducts(user.getId(),products);
     }
 
+    @RequestMapping(value = "list.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("获取购物车信息")
+    public ServerResponse list(HttpSession httpSession){
+        //验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+        return iCartService.list(user.getId());
+    }
+
+
     @RequestMapping(value = "selectAll.do",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation("全选购物车")
