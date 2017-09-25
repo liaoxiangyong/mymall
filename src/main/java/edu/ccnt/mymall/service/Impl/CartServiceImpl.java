@@ -44,7 +44,7 @@ public class CartServiceImpl implements ICartService{
             cartItem.setQuantity(count);
             cartMapper.insert(cartItem);
         }else{
-            count = count + cart.getChecked();
+            count = count + cart.getQuantity();
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
