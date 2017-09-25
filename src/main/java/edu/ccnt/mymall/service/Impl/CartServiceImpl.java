@@ -85,6 +85,12 @@ public class CartServiceImpl implements ICartService{
     }
 
 
+    public ServerResponse<CartVo> selectOrUnSelect(Integer userId,Integer check,Integer productId){
+        log.info("购物车选择与不选");
+        cartMapper.selectOrUnSelect(userId,check,productId);
+        return this.list(userId);
+    }
+
     private CartVo getCartVoLimit(Integer userId){
         CartVo cartVo = new CartVo();
         List<CartProductVo> cartProductVoList = new ArrayList<>();

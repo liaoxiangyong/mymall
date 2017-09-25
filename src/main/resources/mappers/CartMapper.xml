@@ -187,4 +187,13 @@
       </foreach>
     </if>
   </delete>
+
+  <update id="selectOrUnSelect" parameterType="map">
+    update mmall_cart
+    set checked = #{check}
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </update>
 </mapper>
