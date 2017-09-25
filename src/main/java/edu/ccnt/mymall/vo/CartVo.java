@@ -14,4 +14,5 @@ public class CartVo {
     private List<CartProductVo> cartProductVoList;
     private Boolean isAllChecked;       //商品是否全选
     private BigDecimal cartTotalPrice;      //购物车总价
+    private Integer selectQuantity;     //选择的商品数量
 }

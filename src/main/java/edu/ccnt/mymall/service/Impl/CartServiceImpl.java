@@ -97,6 +97,7 @@ public class CartServiceImpl implements ICartService{
         List<Cart> cartList = cartMapper.findCartByUserId(userId);
 
         BigDecimal cartTotalPrice = new BigDecimal("0");        //购物车总价
+        int selectQuantity = 0;
         if(!CollectionUtils.isEmpty(cartList)){
             for(Cart cart : cartList){
                 CartProductVo cartProductVo = new CartProductVo();
@@ -132,6 +133,7 @@ public class CartServiceImpl implements ICartService{
                 if(cart.getChecked() == Const.Cart.CHECKED){
                     //如果已经勾选,增加到整个的购物车总价中
                     cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),cartProductVo.getProductTotalPrice().doubleValue());
+                    selectQuantity += cart.getQuantity();
                 }
                 cartProductVoList.add(cartProductVo);
             }
@@ -139,6 +141,7 @@ public class CartServiceImpl implements ICartService{
         cartVo.setCartProductVoList(cartProductVoList);
         cartVo.setCartTotalPrice(cartTotalPrice);
         cartVo.setIsAllChecked(isAllChecked(userId));
+        cartVo.setSelectQuantity(selectQuantity);
         return cartVo;
     }
 
