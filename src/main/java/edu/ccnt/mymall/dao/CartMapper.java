@@ -61,4 +61,6 @@ public interface CartMapper {
     List<Cart> findCartByUserId(Integer userId);
 
     int isAllChecked(Integer userId);
+
+    void deleteCartByProducts(@Param(value = "userId") Integer userId,@Param(value = "productList") List<String> productList);
 }

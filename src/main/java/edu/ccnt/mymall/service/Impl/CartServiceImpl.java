@@ -1,5 +1,6 @@
 package edu.ccnt.mymall.service.Impl;
 
+import com.google.common.base.Splitter;
 import edu.ccnt.mymall.common.Const;
 import edu.ccnt.mymall.common.ResponseCode;
 import edu.ccnt.mymall.common.ServerResponse;
@@ -12,6 +13,7 @@ import edu.ccnt.mymall.util.BigDecimalUtil;
 import edu.ccnt.mymall.vo.CartProductVo;
 import edu.ccnt.mymall.vo.CartVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -62,6 +64,18 @@ public class CartServiceImpl implements ICartService{
             cart.setQuantity(count);
         }
         cartMapper.updateByPrimaryKeySelective(cart);
+        return this.list(userId);
+    }
+
+
+    public ServerResponse<CartVo> deleteCartProducts(Integer userId,String products){
+        log.info("删除购物车中商品");
+        List<String> productList = Splitter.on(".").splitToList(products);
+        if(CollectionUtils.isEmpty(productList)){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGLE_ARGUMENT.getCode(),ResponseCode.ILLEGLE_ARGUMENT.getDesc());
+        }
+        //删除购物车中商品
+        cartMapper.deleteCartByProducts(userId,productList);
         return this.list(userId);
     }
 

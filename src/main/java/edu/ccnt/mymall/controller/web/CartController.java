@@ -56,4 +56,17 @@ public class CartController {
 
         return iCartService.updateCartProduct(user.getId(),productId,count);
     }
+
+
+    @RequestMapping(value = "deleteCartProducts.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("删除购物车中商品")
+    public ServerResponse deleteCartProducts(HttpSession httpSession,String products){
+        //验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+        return iCartService.deleteCartProducts(user.getId(),products);
+    }
 }
