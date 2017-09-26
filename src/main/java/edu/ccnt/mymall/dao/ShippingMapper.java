@@ -1,6 +1,9 @@
 package edu.ccnt.mymall.dao;
 
 import edu.ccnt.mymall.model.Shipping;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ShippingMapper {
     /**
@@ -50,4 +53,13 @@ public interface ShippingMapper {
      * @mbg.generated Wed Aug 02 21:00:02 CST 2017
      */
     int updateByPrimaryKey(Shipping record);
+
+    int updateByShipping(Shipping record);
+
+    int deleteByUserIdAndShippingId(@Param(value = "userId") Integer userId,@Param(value = "shippingId") Integer shippingId);
+
+
+    Shipping selectByUserIdAndShippingId(@Param(value = "userId") Integer userId,@Param(value = "shippingId") Integer shippingId);
+
+    List<Shipping> selectByUserId(Integer userId);
 }
