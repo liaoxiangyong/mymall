@@ -14,5 +14,6 @@
         <mapper resource="mappers/OrderItemMapper.xml"/>
         <mapper resource="mappers/ShippingMapper.xml"/>
         <mapper resource="mappers/PayInfoMapper.xml"/>
+        <mapper resource="mappers/OrderMapper.xml"/>
     </mappers>
 </configuration>

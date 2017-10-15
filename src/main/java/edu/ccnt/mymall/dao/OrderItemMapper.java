@@ -1,6 +1,10 @@
 package edu.ccnt.mymall.dao;
 
 import edu.ccnt.mymall.model.OrderItem;
+import io.swagger.models.auth.In;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OrderItemMapper {
     /**
@@ -50,4 +54,6 @@ public interface OrderItemMapper {
      * @mbg.generated Wed Aug 02 21:00:02 CST 2017
      */
     int updateByPrimaryKey(OrderItem record);
+
+    List<OrderItem> selectByUserIdAndOrderNo(@Param("orderNo")Long orderNo, @Param("userId")Integer userId);
 }

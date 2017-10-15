@@ -1,6 +1,7 @@
 package edu.ccnt.mymall.dao;
 
 import edu.ccnt.mymall.model.Order;
+import org.apache.ibatis.annotations.Param;
 
 public interface OrderMapper {
     /**
@@ -50,4 +51,8 @@ public interface OrderMapper {
      * @mbg.generated Wed Aug 02 21:00:02 CST 2017
      */
     int updateByPrimaryKey(Order record);
+
+    Order selectByOrderNoAndUserId(@Param("userId")Integer userId,@Param("orderNo")Long orderNo);
+
+    Order selectByOrderNo(Long orderNo);
 }
