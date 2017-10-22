@@ -33,6 +33,22 @@ public class OrderController {
     @Autowired
     private IOrderService iOrderService;
 
+    @RequestMapping(value = "createOrder.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("订单创建")
+    public ServerResponse createOrder(HttpSession httpSession, Integer shippingId){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+
+
+        return null;
+    }
+
+
+
     @RequestMapping(value = "par.do",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation("订单支付")

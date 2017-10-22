@@ -196,4 +196,12 @@
       and product_id = #{productId}
     </if>
   </update>
+
+  <select id="selectByUserIdAndChecked" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mmall_cart
+    where user_id = #{userId}
+    and checked = 1
+  </select>
 </mapper>
