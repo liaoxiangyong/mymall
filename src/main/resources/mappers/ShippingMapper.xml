@@ -15,6 +15,7 @@
     <result column="receiver_province" jdbcType="VARCHAR" property="receiverProvince" />
     <result column="receiver_city" jdbcType="VARCHAR" property="receiverCity" />
     <result column="receiver_district" jdbcType="VARCHAR" property="receiverDistrict" />
+    <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress" />
     <result column="receiver_zip" jdbcType="VARCHAR" property="receiverZip" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -26,7 +27,7 @@
       This element was generated on Wed Aug 02 21:00:02 CST 2017.
     -->
     id, user_id, receiver_name, receiver_phone, receiver_mobile, receiver_province, receiver_city, 
-    receiver_district, receiver_zip, create_time, update_time
+    receiver_district,receiver_address, receiver_zip, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
@@ -60,7 +61,7 @@
       create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
       #{receiverPhone,jdbcType=VARCHAR}, #{receiverMobile,jdbcType=VARCHAR}, #{receiverProvince,jdbcType=VARCHAR}, 
-      #{receiverCity,jdbcType=VARCHAR}, #{receiverDistrict,jdbcType=VARCHAR}, #{receiverZip,jdbcType=VARCHAR},
+      #{receiverCity,jdbcType=VARCHAR}, #{receiverDistrict,jdbcType=VARCHAR},#{receiverAddress,jdbcType=VARCHAR}, #{receiverZip,jdbcType=VARCHAR},
     now(), now())
   </insert>
   <insert id="insertSelective" parameterType="edu.ccnt.mymall.model.Shipping">
@@ -93,8 +94,11 @@
         receiver_city,
       </if>
       <if test="receiverDistrict != null">
-        receiver_district,
-      </if>
+      receiver_district,
+    </if>
+      <if test="receiverAddress != null">
+      receiver_address,
+    </if>
       <if test="receiverZip != null">
         receiver_zip,
       </if>
@@ -126,6 +130,9 @@
       </if>
       <if test="receiverCity != null">
         #{receiverCity,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverAddress != null">
+        #{receiverAddress,jdbcType=VARCHAR},
       </if>
       <if test="receiverDistrict != null">
         #{receiverDistrict,jdbcType=VARCHAR},
@@ -170,6 +177,9 @@
       <if test="receiverDistrict != null">
         receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
       </if>
+      <if test="receiverAddress != null">
+        receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      </if>
       <if test="receiverZip != null">
         receiver_zip = #{receiverZip,jdbcType=VARCHAR},
       </if>
@@ -196,6 +206,7 @@
       receiver_province = #{receiverProvince,jdbcType=VARCHAR},
       receiver_city = #{receiverCity,jdbcType=VARCHAR},
       receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
       receiver_zip = #{receiverZip,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
@@ -227,6 +238,9 @@
       </if>
       <if test="receiverDistrict != null">
         receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverAddress != null">
+        receiver_address = #{receiverAddress,jdbcType=VARCHAR},
       </if>
       <if test="receiverZip != null">
         receiver_zip = #{receiverZip,jdbcType=VARCHAR},

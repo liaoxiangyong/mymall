@@ -42,9 +42,7 @@ public class OrderController {
         if(user == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
         }
-
-
-        return null;
+        return iOrderService.createOrder(user.getId(),shippingId);
     }
 
 

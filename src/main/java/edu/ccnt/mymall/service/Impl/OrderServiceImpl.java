@@ -21,7 +21,9 @@ import edu.ccnt.mymall.util.BigDecimalUtil;
 import edu.ccnt.mymall.util.DateTimeUtil;
 import edu.ccnt.mymall.util.FtpUtil;
 import edu.ccnt.mymall.util.PropertiesUtil;
+import edu.ccnt.mymall.vo.OrderItemVo;
 import edu.ccnt.mymall.vo.OrderVo;
+import edu.ccnt.mymall.vo.ShippingVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,12 +112,53 @@ public class OrderServiceImpl implements IOrderService {
 
         orderVo.setShippingId(order.getShippingId());
         Shipping shipping = shippingMapper.selectByPrimaryKey(order.getShippingId());
+        if(shipping != null){
+            orderVo.setReceiverName(shipping.getReceiverName());
+            orderVo.setShippingVo(assembleShippingVo(shipping));
+        }
 
+        orderVo.setPaymentTime(DateTimeUtil.dateToStr(order.getPaymentTime()));
+        orderVo.setSendTime(DateTimeUtil.dateToStr(order.getSendTime()));
+        orderVo.setEndTime(DateTimeUtil.dateToStr(order.getEndTime()));
+        orderVo.setCreateTime(DateTimeUtil.dateToStr(order.getCreateTime()));
+        orderVo.setCloseTime(DateTimeUtil.dateToStr(order.getCloseTime()));
 
+        List<OrderItemVo> orderItemVoList = Lists.newArrayList();
 
+        for(OrderItem orderItem : orderItemList){
+            OrderItemVo orderItemVo = assembleOrderItemVo(orderItem);
+            orderItemVoList.add(orderItemVo);
+        }
+        orderVo.setOrderItemVoList(orderItemVoList);
         return orderVo;
     }
 
+    private OrderItemVo assembleOrderItemVo(OrderItem orderItem){       //生成orderItemVo返回对象
+        OrderItemVo orderItemVo = new OrderItemVo();
+        orderItemVo.setOrderNo(orderItem.getOrderNo());
+        orderItemVo.setProductId(orderItem.getProductId());
+        orderItemVo.setProductName(orderItem.getProductName());
+        orderItemVo.setProductImage(orderItem.getProductImage());
+        orderItemVo.setCurrentUnitPrice(orderItem.getCurrentUnitPrice());
+        orderItemVo.setQuantity(orderItem.getQuantity());
+        orderItemVo.setTotalPrice(orderItem.getTotalPrice());
+
+        orderItemVo.setCreateTime(DateTimeUtil.dateToStr(orderItem.getCreateTime()));
+        return orderItemVo;
+    }
+
+    private ShippingVo assembleShippingVo(Shipping shipping){      //生成shippingVo返回对象
+        ShippingVo shippingVo = new ShippingVo();
+        shippingVo.setReceiverName(shipping.getReceiverName());
+        shippingVo.setReceiverAddress(shipping.getReceiverAddress());
+        shippingVo.setReceiverProvince(shipping.getReceiverProvince());
+        shippingVo.setReceiverCity(shipping.getReceiverCity());
+        shippingVo.setReceiverDistrict(shipping.getReceiverDistrict());
+        shippingVo.setReceiverMobile(shipping.getReceiverMobile());
+        shippingVo.setReceiverZip(shipping.getReceiverZip());
+        shippingVo.setReceiverPhone(shippingVo.getReceiverPhone());
+        return shippingVo;
+    }
 
     private void cleanCart(List<Cart> cartList){     //订单生成成功以后清空购物车
         for(Cart cart : cartList){
