@@ -10,6 +10,8 @@ import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import edu.ccnt.mymall.common.Const;
@@ -145,6 +147,42 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+    public ServerResponse getOrderDetail(Integer userId,Long orderNo){      //获取订单详情
+        log.info("获取订单详情");
+        Order order = orderMapper.selectByOrderNoAndUserId(userId,orderNo);
+        if(order == null)
+            return ServerResponse.createByErrorMessage("用户不存在该订单");
+        List<OrderItem> orderItemList =  orderItemMapper.selectByUserIdAndOrderNo(orderNo,userId);
+        OrderVo orderVo = assembleOrderVo(order,orderItemList);
+        return ServerResponse.createBySuccess(orderVo);
+    }
+
+
+    public ServerResponse<PageInfo> getOrderList(Integer userId,Integer pageNum,Integer pageSize){
+        log.info("获取订单列表");
+        PageHelper.startPage(pageNum,pageSize);
+        List<Order> orderList = orderMapper.selectByUserId(userId);
+        List<OrderVo> orderVoList = assembleOrderVoList(orderList,userId);
+        PageInfo pageInfo = new PageInfo(orderList);
+        pageInfo.setList(orderVoList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
+
+
+    private List<OrderVo> assembleOrderVoList(List<Order> orderList,Integer userId){
+        List<OrderVo> orderVoList = Lists.newArrayList();
+        for(Order order : orderList){
+            List<OrderItem>  orderItemList = Lists.newArrayList();
+            if(userId == null){     //管理员
+
+            }else{
+                orderItemList = orderItemMapper.selectByUserIdAndOrderNo(order.getOrderNo(),userId);
+            }
+            OrderVo orderVo = assembleOrderVo(order,orderItemList);
+            orderVoList.add(orderVo);
+        }
+        return orderVoList;
+    }
 
     private OrderVo assembleOrderVo(Order order,List<OrderItem> orderItemList) {        //生成返回前端的订单对象
         OrderVo orderVo = new OrderVo();

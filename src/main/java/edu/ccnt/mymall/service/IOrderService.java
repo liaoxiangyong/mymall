@@ -1,5 +1,6 @@
 package edu.ccnt.mymall.service;
 
+import com.github.pagehelper.PageInfo;
 import edu.ccnt.mymall.common.ServerResponse;
 
 import java.util.Map;
@@ -19,4 +20,8 @@ public interface IOrderService {
     ServerResponse cancelOrder(Integer userId,Long orderNo);
 
     ServerResponse getOrderItems(Integer userId);
+
+    ServerResponse getOrderDetail(Integer userId,Long orderNo);
+
+    ServerResponse<PageInfo> getOrderList(Integer userId, Integer pageNum, Integer pageSize);
 }

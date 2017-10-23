@@ -12,10 +12,7 @@ import edu.ccnt.mymall.service.IOrderService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -69,6 +66,32 @@ public class OrderController {
         return  iOrderService.getOrderItems(user.getId());
     }
 
+    @RequestMapping(value = "getOrderDetail.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("获取订单详情")
+    public ServerResponse getOrderDetail(HttpSession httpSession,Long orderNo){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+        return  iOrderService.getOrderDetail(user.getId(),orderNo);
+    }
+
+
+    @RequestMapping(value = "getOrderList.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("获取订单列表")
+    public ServerResponse getOrderList(HttpSession httpSession,
+                                       @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum,
+                                       @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+        return  iOrderService.getOrderList(user.getId(),pageNum,pageSize);
+    }
 
 
     @RequestMapping(value = "par.do",method = RequestMethod.POST)
