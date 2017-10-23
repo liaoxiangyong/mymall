@@ -292,7 +292,7 @@ public class OrderServiceImpl implements IOrderService {
         //校验购物车的数据,包括产品的状态和数量
         for(Cart cart : cartList){
             OrderItem orderItem = new OrderItem();
-            Product product = productMapper.selectByPrimaryKey(orderItem.getProductId());
+            Product product = productMapper.selectByPrimaryKey(cart.getProductId());
             if(Const.ProductStatusEnum.ON_SALE.getCode() != product.getStatus()){
                 return ServerResponse.createByErrorMessage("产品"+product.getName()+"不是在线售卖状态");
             }
