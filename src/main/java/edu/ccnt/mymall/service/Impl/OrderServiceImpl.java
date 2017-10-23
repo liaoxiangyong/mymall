@@ -27,6 +27,7 @@ import edu.ccnt.mymall.vo.OrderItemVo;
 import edu.ccnt.mymall.vo.OrderProductVo;
 import edu.ccnt.mymall.vo.OrderVo;
 import edu.ccnt.mymall.vo.ShippingVo;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.weaver.ast.Or;
@@ -38,10 +39,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by LXY on 2017/10/15.
@@ -490,5 +488,59 @@ public class OrderServiceImpl implements IOrderService {
             return ServerResponse.createBySuccess();
         }
         return ServerResponse.createByError();
+    }
+
+
+
+
+    //backend部分代码
+    public ServerResponse manageGetOrderDetail(Long orderNo){
+        log.info("管理员获取订单详情");
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order == null)
+            return ServerResponse.createByErrorMessage("不存在该订单");
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
+        OrderVo orderVo = assembleOrderVo(order,orderItemList);
+        return ServerResponse.createBySuccess(orderVo);
+    }
+
+
+    public ServerResponse<PageInfo> manageGetOrderList(Integer pageNum, Integer pageSize){
+        log.info("管理员获取商品列表");
+        PageHelper.startPage(pageNum,pageSize);
+        List<Order> orderList = orderMapper.selectAllOrders();
+        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList,null);
+        PageInfo pageResult = new PageInfo(orderList);
+        pageResult.setList(orderVoList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    public ServerResponse<PageInfo> manageSearchOrder(Long orderNo,Integer pageNum,Integer pageSize){
+        log.info("查询订单");
+        PageHelper.startPage(pageNum,pageSize);
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order != null){
+            List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(orderNo);
+            OrderVo orderVo = assembleOrderVo(order,orderItemList);
+
+            PageInfo pageResult = new PageInfo(Lists.newArrayList(order));
+            pageResult.setList(Lists.newArrayList(orderVo));
+            return ServerResponse.createBySuccess(pageResult);
+        }
+        return ServerResponse.createByErrorMessage("订单不存在");
+    }
+
+    public ServerResponse sendGoods(Long orderNo){
+        log.info("发货");
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order != null){
+            if(order.getStatus() == Const.OrderStatusEnum.PAID.getCode()){
+                order.setStatus(Const.OrderStatusEnum.SHIPPED.getCode());
+                order.setSendTime(new Date());
+                orderMapper.updateByPrimaryKeySelective(order);
+                return ServerResponse.createBySuccess("发货成功");
+            }
+        }
+        return ServerResponse.createByErrorMessage("订单不存在");
     }
 }
