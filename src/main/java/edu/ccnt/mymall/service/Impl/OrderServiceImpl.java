@@ -22,10 +22,12 @@ import edu.ccnt.mymall.util.DateTimeUtil;
 import edu.ccnt.mymall.util.FtpUtil;
 import edu.ccnt.mymall.util.PropertiesUtil;
 import edu.ccnt.mymall.vo.OrderItemVo;
+import edu.ccnt.mymall.vo.OrderProductVo;
 import edu.ccnt.mymall.vo.OrderVo;
 import edu.ccnt.mymall.vo.ShippingVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by LXY on 2017/10/15.
@@ -98,6 +101,50 @@ public class OrderServiceImpl implements IOrderService {
         OrderVo orderVo = assembleOrderVo(order,orderItemList);
         return ServerResponse.createBySuccess(orderVo);
     }
+
+
+    public ServerResponse cancelOrder(Integer userId,Long orderNo){
+        log.info("取消订单");
+        Order order = orderMapper.selectByOrderNoAndUserId(userId,orderNo);
+        if(order == null){
+            return ServerResponse.createByErrorMessage("该用户不存在该订单");
+        }
+
+        if(order.getStatus() != Const.OrderStatusEnum.NO_PAY.getCode()){
+            return ServerResponse.createByErrorMessage("该订单不能被取消");
+        }
+
+        Order updateOrder = new Order();
+        updateOrder.setId(order.getId());
+        updateOrder.setStatus(Const.OrderStatusEnum.CANCELED.getCode());
+        int row = orderMapper.updateByPrimaryKeySelective(updateOrder);
+        if(row > 0){
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
+    }
+
+    public ServerResponse getOrderItems(Integer userId){
+        log.info("获取订单的商品列表");
+        OrderProductVo orderProductVo = new OrderProductVo();
+        List<Cart> cartList = cartMapper.selectByUserIdAndChecked(userId);
+        ServerResponse serverResponse =  this.creteOrderItem(userId,cartList);
+        if(!serverResponse.isSuccess())
+            return serverResponse;
+        List<OrderItem> orderItemList = (List<OrderItem>) serverResponse.getData();
+        List<OrderItemVo> orderItemVoList = Lists.newArrayList();
+        BigDecimal payment = new BigDecimal("0");
+        for(OrderItem orderItem : orderItemList){
+            payment = BigDecimalUtil.add(payment.doubleValue(),orderItem.getTotalPrice().doubleValue());
+            OrderItemVo orderItemVo = assembleOrderItemVo(orderItem);
+            orderItemVoList.add(orderItemVo);
+        }
+        orderProductVo.setList(orderItemVoList);
+        orderProductVo.setTotalPrice(payment);
+        return ServerResponse.createBySuccess(orderProductVo);
+    }
+
+
 
     private OrderVo assembleOrderVo(Order order,List<OrderItem> orderItemList) {        //生成返回前端的订单对象
         OrderVo orderVo = new OrderVo();
@@ -196,7 +243,7 @@ public class OrderServiceImpl implements IOrderService {
 
     private Long generateOrderNo(){     //暂时以时间来创建订单
         long currentTime = System.currentTimeMillis();
-        return currentTime + currentTime%10;
+        return currentTime + new Random().nextInt(100);
     }
 
 

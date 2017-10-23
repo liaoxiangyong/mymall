@@ -45,6 +45,30 @@ public class OrderController {
         return iOrderService.createOrder(user.getId(),shippingId);
     }
 
+    @RequestMapping(value = "cancelOrder.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("订单取消")
+    public ServerResponse cancelOrder(HttpSession httpSession, Long orderNo){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+        return iOrderService.cancelOrder(user.getId(),orderNo);
+    }
+
+    @RequestMapping(value = "getOrderItems.do",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation("获取订单的商品列表，即购物车中选中的商品列表")
+    public ServerResponse getOrderItems(HttpSession httpSession){
+        //1、验证登录
+        User user = (User) httpSession.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LONGIN.getCode(),ResponseCode.NEED_LONGIN.getDesc());
+        }
+        return  iOrderService.getOrderItems(user.getId());
+    }
+
 
 
     @RequestMapping(value = "par.do",method = RequestMethod.POST)
